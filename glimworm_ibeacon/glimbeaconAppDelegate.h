@@ -84,5 +84,6 @@ struct myuuid{
 - (IBAction)p5m:(id)sender;
 - (IBAction)p50m:(id)sender;
 - (IBAction)p100m:(id)sender;
+- (IBAction)w_cancel:(id)sender;
 
 @end

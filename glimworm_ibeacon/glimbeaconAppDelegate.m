@@ -750,6 +750,10 @@ NSString *currentfirmware = @"";
     [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
 }
 
+- (IBAction)w_cancel:(id)sender {
+    [self done];
+}
+
 - (IBAction)buttonstop:(id)sender {
     [self stopScan];
 }

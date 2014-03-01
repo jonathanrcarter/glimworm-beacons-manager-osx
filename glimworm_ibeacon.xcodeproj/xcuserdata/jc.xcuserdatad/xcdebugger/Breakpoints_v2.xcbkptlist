@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "glimworm_ibeacon/glimbeaconAppDelegate.m"
-            timestampString = "415374965.390924"
+            timestampString = "415389175.661245"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "841"
-            endingLineNumber = "841"
+            startingLineNumber = "845"
+            endingLineNumber = "845"
             landmarkName = "-button_favourite:"
             landmarkType = "5">
          </BreakpointContent>
