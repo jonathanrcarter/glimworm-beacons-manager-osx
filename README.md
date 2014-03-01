@@ -1,5 +1,5 @@
-glimworm-beacons-manager-osx
-============================
+Glimworm Beacons Manager for  OSX
+=================================
 
 Management tool for glimworm beacons
 
