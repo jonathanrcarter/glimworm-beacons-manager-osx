@@ -18,6 +18,11 @@
 		492F09571866C3C1005EBBAC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 492F09361866C3C1005EBBAC /* Cocoa.framework */; };
 		492F095F1866C3C1005EBBAC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 492F095D1866C3C1005EBBAC /* InfoPlist.strings */; };
 		492F09611866C3C1005EBBAC /* glimworm_ibeaconTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 492F09601866C3C1005EBBAC /* glimworm_ibeaconTests.m */; };
+		492F096B1866D421005EBBAC /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 492F096A1866D421005EBBAC /* IOBluetooth.framework */; };
+		492F096D1866D489005EBBAC /* IOBluetoothUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 492F096C1866D489005EBBAC /* IOBluetoothUI.framework */; };
+		492F09731866E99D005EBBAC /* BTDeviceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 492F09721866E99D005EBBAC /* BTDeviceModel.m */; };
+		492F09771867A1CF005EBBAC /* beacon_icon_80x80.png in Resources */ = {isa = PBXBuildFile; fileRef = 492F09761867A1CF005EBBAC /* beacon_icon_80x80.png */; };
+		49593A55186B55CA00B55534 /* AccountModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 49593A54186B55CA00B55534 /* AccountModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +55,14 @@
 		492F095C1866C3C1005EBBAC /* glimworm_ibeaconTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "glimworm_ibeaconTests-Info.plist"; sourceTree = "<group>"; };
 		492F095E1866C3C1005EBBAC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		492F09601866C3C1005EBBAC /* glimworm_ibeaconTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = glimworm_ibeaconTests.m; sourceTree = "<group>"; };
+		492F096A1866D421005EBBAC /* IOBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetooth.framework; path = System/Library/Frameworks/IOBluetooth.framework; sourceTree = SDKROOT; };
+		492F096C1866D489005EBBAC /* IOBluetoothUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOBluetoothUI.framework; path = System/Library/Frameworks/IOBluetoothUI.framework; sourceTree = SDKROOT; };
+		492F09711866E99D005EBBAC /* BTDeviceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BTDeviceModel.h; sourceTree = "<group>"; };
+		492F09721866E99D005EBBAC /* BTDeviceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BTDeviceModel.m; sourceTree = "<group>"; };
+		492F09761867A1CF005EBBAC /* beacon_icon_80x80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beacon_icon_80x80.png; sourceTree = "<group>"; };
+		492F09781867FD2E005EBBAC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		49593A53186B55CA00B55534 /* AccountModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountModel.h; path = glimworm_ibeacon/accounts/AccountModel.h; sourceTree = "<group>"; };
+		49593A54186B55CA00B55534 /* AccountModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountModel.m; path = glimworm_ibeacon/accounts/AccountModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				492F096D1866D489005EBBAC /* IOBluetoothUI.framework in Frameworks */,
+				492F096B1866D421005EBBAC /* IOBluetooth.framework in Frameworks */,
 				492F09371866C3C1005EBBAC /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -76,6 +91,10 @@
 		492F092A1866C3C1005EBBAC = {
 			isa = PBXGroup;
 			children = (
+				49593A53186B55CA00B55534 /* AccountModel.h */,
+				49593A54186B55CA00B55534 /* AccountModel.m */,
+				492F09711866E99D005EBBAC /* BTDeviceModel.h */,
+				492F09721866E99D005EBBAC /* BTDeviceModel.m */,
 				492F093C1866C3C1005EBBAC /* glimworm_ibeacon */,
 				492F095A1866C3C1005EBBAC /* glimworm_ibeaconTests */,
 				492F09351866C3C1005EBBAC /* Frameworks */,
@@ -95,6 +114,9 @@
 		492F09351866C3C1005EBBAC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				492F09781867FD2E005EBBAC /* CoreLocation.framework */,
+				492F096C1866D489005EBBAC /* IOBluetoothUI.framework */,
+				492F096A1866D421005EBBAC /* IOBluetooth.framework */,
 				492F09361866C3C1005EBBAC /* Cocoa.framework */,
 				492F09551866C3C1005EBBAC /* XCTest.framework */,
 				492F09381866C3C1005EBBAC /* Other Frameworks */,
@@ -127,6 +149,7 @@
 		492F093D1866C3C1005EBBAC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				492F09761867A1CF005EBBAC /* beacon_icon_80x80.png */,
 				492F093E1866C3C1005EBBAC /* glimworm_ibeacon-Info.plist */,
 				492F093F1866C3C1005EBBAC /* InfoPlist.strings */,
 				492F09421866C3C1005EBBAC /* main.m */,
@@ -234,6 +257,7 @@
 				492F09411866C3C1005EBBAC /* InfoPlist.strings in Resources */,
 				492F094F1866C3C1005EBBAC /* Images.xcassets in Resources */,
 				492F09471866C3C1005EBBAC /* Credits.rtf in Resources */,
+				492F09771867A1CF005EBBAC /* beacon_icon_80x80.png in Resources */,
 				492F094D1866C3C1005EBBAC /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,6 +277,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				492F09731866E99D005EBBAC /* BTDeviceModel.m in Sources */,
+				49593A55186B55CA00B55534 /* AccountModel.m in Sources */,
 				492F09431866C3C1005EBBAC /* main.m in Sources */,
 				492F094A1866C3C1005EBBAC /* glimbeaconAppDelegate.m in Sources */,
 			);
@@ -465,6 +491,7 @@
 				492F09661866C3C1005EBBAC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		492F09671866C3C1005EBBAC /* Build configuration list for PBXNativeTarget "glimworm_ibeaconTests" */ = {
 			isa = XCConfigurationList;
@@ -473,6 +500,7 @@
 				492F09691866C3C1005EBBAC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
