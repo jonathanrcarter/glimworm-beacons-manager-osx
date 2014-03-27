@@ -28,6 +28,7 @@
 @synthesize settingspanel;
 @synthesize AccountBeacons;
 @synthesize workingpanel;
+@synthesize writingpanel;
 @synthesize selectpanel;
 @synthesize p_batterylevel;
 @synthesize p_batterlevel_txt;
@@ -38,6 +39,20 @@
 @synthesize p50m;
 @synthesize p5m;
 @synthesize p100m;
+@synthesize p_adv_1022;
+@synthesize p_adv_152;
+@synthesize p_adv_2000;
+@synthesize p_adv_211;
+@synthesize p_adv_3000;
+@synthesize p_adv_318;
+@synthesize p_adv_4000;
+@synthesize p_adv_417;
+@synthesize p_adv_5000;
+@synthesize p_adv_546;
+@synthesize p_adv_6000;
+@synthesize p_adv_7000;
+@synthesize p_adv_760;
+@synthesize p_adv_852;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -54,6 +69,7 @@ BTDeviceModel* currentPeripheral = Nil;
 CBCharacteristic *_currentChar = Nil;
 NSString *currentcommand = @"";
 NSString *currentfirmware = @"";
+bool isWorking = FALSE;
 
 
 
@@ -210,16 +226,32 @@ NSString *currentfirmware = @"";
                 
                 NSLog(@"array %@",array[1]);
                 int val = [array[1] intValue];
+                NSString *Val = array[1];
                 
-                if (val == 0) {
-                    p_adv_100.state = 1;
-                    p_adv_1280a.state = 0;
-                    
-                } else if (val == 1) {
-                    p_adv_100.state = 0;
-                    p_adv_1280a.state = 1;
-                } else {
+                [self clearadvertisingbuttonstates];
+                
+                if ([self has16advertisments] == FALSE) {
 
+                    if ([Val isEqualToString:@"0"]) p_adv_100.state = 1;
+                    if ([Val isEqualToString:@"1"]) p_adv_1280a.state = 1;
+                } else {
+                    if ([Val isEqualToString:@"0"]) p_adv_100.state = 1;
+                    if ([Val isEqualToString:@"1"]) p_adv_152.state = 1;
+                    if ([Val isEqualToString:@"2"]) p_adv_211.state = 1;
+                    if ([Val isEqualToString:@"3"]) p_adv_318.state = 1;
+                    if ([Val isEqualToString:@"4"]) p_adv_417.state = 1;
+                    if ([Val isEqualToString:@"5"]) p_adv_546.state = 1;
+                    if ([Val isEqualToString:@"6"]) p_adv_760.state = 1;
+                    if ([Val isEqualToString:@"7"]) p_adv_852.state = 1;
+                    if ([Val isEqualToString:@"8"]) p_adv_1022.state = 1;
+                    if ([Val isEqualToString:@"9"]) p_adv_1280a.state = 1;
+                    if ([Val isEqualToString:@"A"]) p_adv_2000.state = 1;
+                    if ([Val isEqualToString:@"B"]) p_adv_3000.state = 1;
+                    if ([Val isEqualToString:@"C"]) p_adv_4000.state = 1;
+                    if ([Val isEqualToString:@"D"]) p_adv_5000.state = 1;
+                    if ([Val isEqualToString:@"E"]) p_adv_6000.state = 1;
+                    if ([Val isEqualToString:@"F"]) p_adv_7000.state = 1;
+                    
                 }
 
             }
@@ -271,6 +303,12 @@ NSString *currentfirmware = @"";
 //    [progressIndicator setHidden:TRUE];
 //    [progressIndicator stopAnimation:self];
 }
+
+- (void) centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)aPeripheral error:(NSError *)error
+{
+    NSLog(@" connect FAILED ( %@ )", [aPeripheral name]);
+    
+}
 - (void) centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)aPeripheral error:(NSError *)error
 {
     NSLog(@" DISconnectED ( %@ )", [aPeripheral name]);
@@ -282,16 +320,28 @@ NSString *currentfirmware = @"";
     return retval;
 }
 
+- (NSString *) hex2dec:(NSString *)HEX {
+
+    unsigned int ibmajor;
+    NSScanner* scanner = [NSScanner scannerWithString:HEX];
+    [scanner scanHexInt:&ibmajor];
+    NSString *dec_string = [[NSString alloc] initWithFormat:@"%u", ibmajor];
+    return dec_string;
+}
+
+
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     
     NSString *value = [[NSString alloc] initWithFormat:@"disc %@ %@ %@", peripheral.name, RSSI, peripheral.UUID];
-    NSString *_uuid = [[NSString alloc] initWithFormat:@"%@", peripheral.UUID];
-//    NSString *_name = [[NSString alloc] initWithFormat:@"%@", peripheral.name];
-    NSString *_name = [[NSString alloc] initWithFormat:@"%@", peripheral.UUID];
+//    NSString *_uuid = [[NSString alloc] initWithFormat:@"%@", peripheral.UUID];
+    NSString *_uuid = [self uuidToString:peripheral.UUID];
+    NSString *_name = [[NSString alloc] initWithFormat:@"%@", peripheral.name];
+//    NSString *_name = [[NSString alloc] initWithFormat:@"%@", peripheral.UUID];
+//    NSString *_name = [self uuidToString:peripheral.UUID];
 
     NSString *u = [self uuidToString:peripheral.UUID];
 
-    NSLog(@"CFSTRINGREF u %@",u);
+    NSLog(@"CFSTRINGREF u %@",u);   // this is just the UUID
     NSLog(@"CFSTRINGREF U %@",_uuid);
     
     @try {
@@ -299,16 +349,19 @@ NSString *currentfirmware = @"";
     
     [statusbox setStringValue:value];
     
+    if (_uuid == NULL) _uuid = @"";
     if (_name == NULL) _name = @"";
 
     for (int i=0; i < [ItemArray count]; i++) {
         BTDeviceModel *m = [ItemArray objectAtIndex:i];
 
         NSLog(@"CFSTRINGREF MNAME %@",m.name);
+        NSLog(@"CFSTRINGREF UUID %@",m.UUID);
         
-        if ([m.name isEqualTo: (_name)] || [m.name isEqualToString: (_name)])
+        if ([m.UUID isEqualTo: (_uuid)] || [m.UUID isEqualToString: (_uuid)])
         {
             m.RSSI = RSSI;
+            m.name = _name;
 
             for (CBService* service in peripheral.services)
             {
@@ -339,13 +392,14 @@ NSString *currentfirmware = @"";
                                           [ss2 substringWithRange:NSMakeRange(46, 2)],
                                           [ss2 substringWithRange:NSMakeRange(48, 2)]];
                     
+                    
                     NSString *ib_minor = [NSString stringWithFormat:@"%@%@",
                                           [ss2 substringWithRange:NSMakeRange(50, 2)],
                                           [ss2 substringWithRange:NSMakeRange(52, 2)]];
                     
                     m.ib_uuid = ib_uuid;
-                    m.ib_major = ib_major;
-                    m.ib_minor = ib_minor;
+                    m.ib_major = [self hex2dec:ib_major];
+                    m.ib_minor = [self hex2dec:ib_minor];
                     [self findItemInAccountArray:m];
                     
                 }
@@ -401,8 +455,8 @@ NSString *currentfirmware = @"";
             NSLog(@"AdvDataArray: IBMAJOR : %@ ",ib_major);
             NSLog(@"AdvDataArray: IBINOR : %@ ",ib_minor);
             pm.ib_uuid = ib_uuid;
-            pm.ib_major = ib_major;
-            pm.ib_minor = ib_minor;
+            pm.ib_major = [self hex2dec:ib_major];
+            pm.ib_minor = [self hex2dec:ib_minor];
 
             
         }
@@ -458,6 +512,9 @@ NSString *currentfirmware = @"";
     return ItemArray;
 }
 
+-(void)clearBeaconArray {
+    [ItemArray removeAllObjects];
+}
 /* account array */
 
 -(void)insertObject:(AccountModel *)p inAccountArrayAtIndex:(NSUInteger)index {
@@ -571,6 +628,7 @@ NSString *currentfirmware = @"";
 }
 - (IBAction)buttonbot:(id)sender {
     [statusbox setStringValue:@"test"];
+    [self clearBeaconArray];
     [self startScan];
     
 //    NSString * ret = [self getDataFrom:@"http://jon651.glimworm.com/ibeacon/api.php?action=beacons&verb="];
@@ -691,6 +749,15 @@ NSString *currentfirmware = @"";
 
 }
 
+- (BOOL) has16advertisments {
+    if ([currentfirmware isEqualToString:@"V517"]) return FALSE;
+    if ([currentfirmware isEqualToString:@"V518"]) return FALSE;
+    if ([currentfirmware isEqualToString:@"V519"]) return FALSE;
+    if ([currentfirmware isEqualToString:@"V520"]) return FALSE;
+    if ([currentfirmware isEqualToString:@"V521"]) return FALSE;
+    return TRUE;
+}
+
 - (IBAction)p_adv_get:(id)sender {
     
     NSData *data = [_ADV_GET dataUsingEncoding:NSUTF8StringEncoding];
@@ -702,22 +769,191 @@ NSString *currentfirmware = @"";
 }
 
 - (IBAction)p_adv_100:(id)sender {
-    NSData *data = [_ADV_100 dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
-    currentcommand = @"AT+ADVI?";
-    [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
-    [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    if ([self has16advertisments] == TRUE) {
+        NSData *data = [@"AT+ADVI0" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_152:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI1" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+    
+}
+
+- (IBAction)p_adv_211:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI2" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_318:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI3" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_417:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI4" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_546:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI5" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_760:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI6" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_852:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI7" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_1022:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI8" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_2000:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVIA" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_3000:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVIB" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_4000:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVIC" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_5000:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVID" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_6000:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVIE" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+}
+
+- (IBAction)p_adv_7000:(id)sender {
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVIF" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
 }
 
 - (IBAction)p_adv_1280:(id)sender {
-    NSData *data = [_ADV_1280 dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
-    [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
-    currentcommand = @"AT+ADVI?";
-    [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    if ([self has16advertisments] == TRUE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI9" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
+    if ([self has16advertisments] == FALSE) {
+        [self writing];
+        NSData *data = [@"AT+ADVI1" dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
+        currentcommand = @"AT+ADVI?";
+        [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
+        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+    }
 }
 
 - (IBAction)p_battery:(id)sender {
+    [self working];
     NSData *data = [_BATT dataUsingEncoding:NSUTF8StringEncoding];
     NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
     [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
@@ -727,6 +963,7 @@ NSString *currentfirmware = @"";
 }
 
 - (IBAction)p5m:(id)sender {
+    [self writing];
     NSData *data = [@"AT+POWE1" dataUsingEncoding:NSUTF8StringEncoding];
     NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
     currentcommand = @"AT+POWE?";
@@ -735,6 +972,7 @@ NSString *currentfirmware = @"";
 }
 
 - (IBAction)p50m:(id)sender {
+    [self writing];
     NSData *data = [@"AT+POWE2" dataUsingEncoding:NSUTF8StringEncoding];
     NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
     currentcommand = @"AT+POWE?";
@@ -743,6 +981,7 @@ NSString *currentfirmware = @"";
 }
 
 - (IBAction)p100m:(id)sender {
+    [self writing];
     NSData *data = [@"AT+POWE3" dataUsingEncoding:NSUTF8StringEncoding];
     NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
     currentcommand = @"AT+POWE?";
@@ -752,6 +991,10 @@ NSString *currentfirmware = @"";
 
 - (IBAction)w_cancel:(id)sender {
     [self done];
+}
+
+- (IBAction)wr_cancel:(id)sender {
+    [self donewriting];
 }
 
 - (IBAction)buttonstop:(id)sender {
@@ -772,21 +1015,8 @@ NSString *currentfirmware = @"";
     
     if (currentPeripheral != Nil) {
         [p_name setStringValue: currentPeripheral.name];
-        
-        unsigned int ibmajor;
-        NSScanner* scanner = [NSScanner scannerWithString:currentPeripheral.ib_major];
-        [scanner scanHexInt:&ibmajor];
-        NSString *ibmajor_str = [[NSString alloc] initWithFormat:@"%u", ibmajor];
-
-        unsigned int ibminor;
-        scanner = [NSScanner scannerWithString:currentPeripheral.ib_minor];
-        [scanner scanHexInt:&ibminor];
-        NSString *ibminor_str = [[NSString alloc] initWithFormat:@"%u", ibminor];
-
-        
-        
-        [p_major setStringValue: ibmajor_str];
-        [p_minor setStringValue: ibminor_str];
+        [p_major setStringValue: currentPeripheral.ib_major];
+        [p_minor setStringValue: currentPeripheral.ib_minor];
         [p_uuid setStringValue: currentPeripheral.ib_uuid];
         [p_maj setStringValue: currentPeripheral.ib_major];
         [p_min setStringValue: currentPeripheral.ib_minor];
@@ -795,8 +1025,8 @@ NSString *currentfirmware = @"";
         [p_batterylevel setDoubleValue:0.0];
         [p_batterlevel_txt setStringValue:@""];
         [p_firmware setStringValue:@""];
-        p_adv_1280a.state = 0;
-        p_adv_100.state = 0;
+        [self clearadvertisingbuttonstates];
+        
         p5m.state = 0;
         p50m.state = 0;
         p100m.state = 0;
@@ -818,6 +1048,26 @@ NSString *currentfirmware = @"";
     
     [self working];
     
+}
+
+-(void) clearadvertisingbuttonstates {
+    p_adv_100.state = 0;
+    p_adv_152.state = 0;
+    p_adv_211.state = 0;
+    p_adv_318.state = 0;
+    p_adv_417.state = 0;
+    p_adv_546.state = 0;
+    p_adv_546.state = 0;
+    p_adv_760.state = 0;
+    p_adv_852.state = 0;
+    p_adv_1022.state = 0;
+    p_adv_1280a.state = 0;
+    p_adv_2000.state = 0;
+    p_adv_3000.state = 0;
+    p_adv_4000.state = 0;
+    p_adv_5000.state = 0;
+    p_adv_6000.state = 0;
+    p_adv_7000.state = 0;
 }
 
 - (IBAction)button_favourite:(id)sender {
@@ -913,19 +1163,58 @@ const char CMD[] = "\x41\x54\x2B\x4D\x41\x52\x4A\x3F";     // AT+MARJ?
     [self q_next];
 }
 
+
+-(void) applicationDidResignActive:(NSNotification *)notification {
+    NSLog(@"--- RESIGN_ACTIVE");
+}
+-(void) applicationDidBecomeActive:(NSNotification *)notification {
+    NSLog(@"--- BECOME_ACTIVE");
+    if (isWorking == TRUE) {
+        [self q_readall];
+    }
+}
+-(void) applicationDidHide:(NSNotification *)notification {
+    NSLog(@"--- HIDE");
+    
+}
+-(void) applicationDidUnhide:(NSNotification *)notification {
+    NSLog(@"--- UN_HIDE");
+    
+}
 - (void)working {
+    
+    isWorking = TRUE;
     
     [[NSApplication sharedApplication] beginSheet:workingpanel
                                    modalForWindow:panel
                                     modalDelegate:self
                                    didEndSelector:Nil
                                       contextInfo:nil];
+    
 }
 
 - (void)done {
     [NSApp endSheet:workingpanel];
     [workingpanel orderOut:self];
+    isWorking = FALSE;
 }
+
+
+- (void)writing {
+    
+    [[NSApplication sharedApplication] beginSheet:writingpanel
+                                   modalForWindow:panel
+                                    modalDelegate:self
+                                   didEndSelector:Nil
+                                      contextInfo:nil];
+    
+}
+
+- (void)donewriting {
+    [NSApp endSheet:writingpanel];
+    [writingpanel orderOut:self];
+}
+
 
 
 
@@ -960,15 +1249,36 @@ NSMutableArray *Queue;
             3. Add AT+MINO command (Query/Set iBeacon minor)
          */
         
-        if ([currentfirmware isEqualToString:@"V517"] && [currentcommand isEqualToString:@"AT+MEAS?"]) [self q_next];
-        if ([currentfirmware isEqualToString:@"V518"] && [currentcommand isEqualToString:@"AT+MEAS?"]) [self q_next];
-        if ([currentfirmware isEqualToString:@"V519"] && [currentcommand isEqualToString:@"AT+MEAS?"]) [self q_next];
+        if ([currentfirmware isEqualToString:@"V517"] && [currentcommand isEqualToString:@"AT+MEAS?"]) {
+            [self q_next];
+            return;
+        }
+        if ([currentfirmware isEqualToString:@"V518"] && [currentcommand isEqualToString:@"AT+MEAS?"]) {
+            [self q_next];
+            return;
+        }
+        if ([currentfirmware isEqualToString:@"V519"] && [currentcommand isEqualToString:@"AT+MEAS?"]) {
+            [self q_next];
+            return;
+        }
 
-        if ([currentfirmware isEqualToString:@"V517"] && [currentcommand isEqualToString:@"AT+MEAS?"]) [self q_next];
-        if ([currentfirmware isEqualToString:@"V518"] && [currentcommand isEqualToString:@"AT+MEAS?"]) [self q_next];
-        if ([currentfirmware isEqualToString:@"V519"] && [currentcommand isEqualToString:@"AT+MEAS?"]) [self q_next];
-        if ([currentfirmware isEqualToString:@"V520"] && [currentcommand isEqualToString:@"AT+MEAS?"]) [self q_next];
-        
+        if ([currentfirmware isEqualToString:@"V517"] && [currentcommand isEqualToString:@"AT+MEAS?"]) {
+            [self q_next];
+            return;
+        }
+        if ([currentfirmware isEqualToString:@"V518"] && [currentcommand isEqualToString:@"AT+MEAS?"]) {
+            [self q_next];
+            return;
+        }
+        if ([currentfirmware isEqualToString:@"V519"] && [currentcommand isEqualToString:@"AT+MEAS?"]) {
+            [self q_next];
+            return;
+        }
+        if ([currentfirmware isEqualToString:@"V520"] && [currentcommand isEqualToString:@"AT+MEAS?"]) {
+            [self q_next];
+            return;
+        }
+    
 
         currentcommand = [[NSString alloc] initWithFormat:@"%@", q_str];
         
@@ -978,6 +1288,7 @@ NSMutableArray *Queue;
         [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
     } else {
         currentcommand = @"";
+        [self donewriting];
         [self done];
     }
     
@@ -985,7 +1296,8 @@ NSMutableArray *Queue;
 - (IBAction)p_set:(id)sender {
 
     // thanks for the formaating of the hex to http://stackoverflow.com/questions/5473896/objective-c-converting-an-integer-to-a-hex-value
-    
+
+    [self writing];
     
     NSString *ibmajor_str_val = [[NSString alloc] initWithFormat:@"%04X", [p_major intValue]];
     NSString *ibminor_str_val = [[NSString alloc] initWithFormat:@"%04X", [p_minor intValue]];
@@ -999,10 +1311,33 @@ NSMutableArray *Queue;
                              [ibminor_str_val substringWithRange:NSMakeRange(0,2)],
                              [ibminor_str_val substringWithRange:NSMakeRange(2,2)]];
     
-    NSString *name_str = [[NSString alloc] initWithFormat:@"AT+NAME%@", [p_name stringValue]];
+    NSString *name_str = [[NSString alloc] initWithFormat:@"AT+NAME%@",
+                          ([[p_name stringValue] length] > 6 ) ? [[[p_name stringValue] uppercaseString] substringWithRange:NSMakeRange(0, 6)] : [[p_name stringValue] uppercaseString]
+                          ];
+    
+    // format   74278bda-b644-4520-8f0c-720eaf059935
+    //          0        9    14   19   24  28
+
+    NSString *ib0 = [NSString stringWithFormat:@"AT+IBE0%@",
+                         [[[p_uuid stringValue] uppercaseString] substringWithRange:NSMakeRange(0, 8)]
+                         ];
+
+    NSString *ib1 = [NSString stringWithFormat:@"AT+IBE1%@%@",
+                     [[[p_uuid stringValue] uppercaseString] substringWithRange:NSMakeRange(9, 4)],
+                     [[[p_uuid stringValue] uppercaseString] substringWithRange:NSMakeRange(14, 4)]
+                     ];
+
+    NSString *ib2 = [NSString stringWithFormat:@"AT+IBE2%@%@",
+                     [[[p_uuid stringValue] uppercaseString] substringWithRange:NSMakeRange(19, 4)],
+                     [[[p_uuid stringValue] uppercaseString] substringWithRange:NSMakeRange(24, 4)]
+                     ];
+
+    NSString *ib3 = [NSString stringWithFormat:@"AT+IBE3%@",
+                     [[[p_uuid stringValue] uppercaseString] substringWithRange:NSMakeRange(28, 8)]
+                     ];
 
     
-    Queue = [NSMutableArray arrayWithObjects:ibmajor_str,ibminor_str,name_str,nil];
+    Queue = [NSMutableArray arrayWithObjects:ibmajor_str,ibminor_str,ib0,ib1,ib2,ib3,name_str,nil];
     
     [self q_next];
 
@@ -1064,5 +1399,8 @@ NSMutableArray *Queue;
 }
 
 
+
+- (IBAction)p_adv_152a:(id)sender {
+}
 
 @end

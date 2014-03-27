@@ -30,6 +30,7 @@ struct myuuid{
 @property (unsafe_unretained) IBOutlet NSPanel *settingspanel;
 @property (unsafe_unretained) IBOutlet NSPanel *selectpanel;
 @property (unsafe_unretained) IBOutlet NSPanel *workingpanel;
+@property (unsafe_unretained) IBOutlet NSPanel *writingpanel;
 @property (weak) IBOutlet NSView *v_details;
 
 - (IBAction)buttonbot:(id)sender;
@@ -63,6 +64,20 @@ struct myuuid{
 @property (weak) IBOutlet NSButton *p5m;
 @property (weak) IBOutlet NSButton *p50m;
 @property (weak) IBOutlet NSButton *p100m;
+@property (weak) IBOutlet NSButton *p_adv_152;
+@property (weak) IBOutlet NSButton *p_adv_211;
+@property (weak) IBOutlet NSButton *p_adv_318;
+@property (weak) IBOutlet NSButton *p_adv_417;
+@property (weak) IBOutlet NSButton *p_adv_546;
+@property (weak) IBOutlet NSButton *p_adv_760;
+@property (weak) IBOutlet NSButton *p_adv_852;
+@property (weak) IBOutlet NSButton *p_adv_1022;
+@property (weak) IBOutlet NSButton *p_adv_2000;
+@property (weak) IBOutlet NSButton *p_adv_3000;
+@property (weak) IBOutlet NSButton *p_adv_4000;
+@property (weak) IBOutlet NSButton *p_adv_5000;
+@property (weak) IBOutlet NSButton *p_adv_6000;
+@property (weak) IBOutlet NSButton *p_adv_7000;
 
 - (IBAction)buttonstop:(id)sender;
 - (IBAction)button_connect:(id)sender;
@@ -79,11 +94,31 @@ struct myuuid{
 - (IBAction)p_version:(id)sender;
 - (IBAction)p_adv_get:(id)sender;
 - (IBAction)p_adv_100:(id)sender;
+- (IBAction)p_adv_152:(id)sender;
+- (IBAction)p_adv_211:(id)sender;
+- (IBAction)p_adv_318:(id)sender;
+- (IBAction)p_adv_417:(id)sender;
+- (IBAction)p_adv_546:(id)sender;
+- (IBAction)p_adv_760:(id)sender;
+- (IBAction)p_adv_852:(id)sender;
+- (IBAction)p_adv_1022:(id)sender;
+- (IBAction)p_adv_2000:(id)sender;
+- (IBAction)p_adv_3000:(id)sender;
+- (IBAction)p_adv_4000:(id)sender;
+- (IBAction)p_adv_5000:(id)sender;
+- (IBAction)p_adv_6000:(id)sender;
+- (IBAction)p_adv_7000:(id)sender;
+
+
+
+
+
 - (IBAction)p_adv_1280:(id)sender;
 - (IBAction)p_battery:(id)sender;
 - (IBAction)p5m:(id)sender;
 - (IBAction)p50m:(id)sender;
 - (IBAction)p100m:(id)sender;
 - (IBAction)w_cancel:(id)sender;
+- (IBAction)wr_cancel:(id)sender;
 
 @end
