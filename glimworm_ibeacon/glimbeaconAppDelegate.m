@@ -53,6 +53,13 @@
 @synthesize p_adv_7000;
 @synthesize p_adv_760;
 @synthesize p_adv_852;
+@synthesize main_scrollview;
+@synthesize tb_scan_for_beacons;
+@synthesize scanningbar;
+@synthesize scanningbar_spinner;
+
+
+#pragma mark - Application stop / start
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -61,6 +68,26 @@
                                                        queue:nil];
     
 }
+-(void) applicationDidResignActive:(NSNotification *)notification {
+    NSLog(@"--- RESIGN_ACTIVE");
+}
+-(void) applicationDidBecomeActive:(NSNotification *)notification {
+    NSLog(@"--- BECOME_ACTIVE");
+    if (isWorking == TRUE) {
+        [self q_readall];
+    }
+}
+-(void) applicationDidHide:(NSNotification *)notification {
+    NSLog(@"--- HIDE");
+    
+}
+-(void) applicationDidUnhide:(NSNotification *)notification {
+    NSLog(@"--- UN_HIDE");
+    
+}
+
+
+#pragma mark - Application constants and variables
 
 static NSString *const kServiceUUID = @"5B2EABB7-93CB-4C6A-94D4-C6CF2F331ED5";
 static NSString *const kCharacteristicUUID = @"D589A9D6-C7EE-44FC-8F0E-46DD631EC940";
@@ -73,6 +100,8 @@ bool isWorking = FALSE;
 
 
 
+#pragma mark - Start and Stop scanning
+
 - (void)startScan {
     NSDictionary *options = @{CBCentralManagerScanOptionAllowDuplicatesKey: @YES};
 //    CBUUID *serviceUUID = [CBUUID UUIDWithString:kServiceUUID];
@@ -80,7 +109,12 @@ bool isWorking = FALSE;
     [statusbox setStringValue:@"scanning"];
     
 }
+- (void)stopScan {
+    [self.manager stopScan];
+}
 
+
+#pragma mark - Service Discovery
 
 - (void)peripheral:(CBPeripheral *)aPeripheral didDiscoverServices:(NSError *)error {
 
@@ -97,6 +131,8 @@ bool isWorking = FALSE;
     }
 }
 
+
+#pragma mark - Characteristics Discovery
 
 - (void) peripheral:(CBPeripheral *)aPeripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error
 {
@@ -225,7 +261,7 @@ bool isWorking = FALSE;
                 NSArray *array = [str componentsSeparatedByString:@":"];
                 
                 NSLog(@"array %@",array[1]);
-                int val = [array[1] intValue];
+                //int val = [array[1] intValue];
                 NSString *Val = array[1];
                 
                 [self clearadvertisingbuttonstates];
@@ -285,6 +321,8 @@ bool isWorking = FALSE;
 }
 
 
+#pragma mark - Peripheral Connection and disconnection
+
 /*
  Invoked whenever a connection is succesfully created with the peripheral.
  Discover available services on the peripheral
@@ -315,6 +353,8 @@ bool isWorking = FALSE;
     [self startScan];
 }
 
+#pragma mark - Type Converters
+
 - (NSString *) uuidToString:(CFUUIDRef)UUID {
     NSString *retval = CFBridgingRelease(CFUUIDCreateString(NULL, UUID));
     return retval;
@@ -330,6 +370,8 @@ bool isWorking = FALSE;
 }
 
 
+#pragma mark - Peripheral Discovery
+
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     
     NSString *value = [[NSString alloc] initWithFormat:@"disc %@ %@ %@", peripheral.name, RSSI, peripheral.UUID];
@@ -339,131 +381,131 @@ bool isWorking = FALSE;
 //    NSString *_name = [[NSString alloc] initWithFormat:@"%@", peripheral.UUID];
 //    NSString *_name = [self uuidToString:peripheral.UUID];
 
-    NSString *u = [self uuidToString:peripheral.UUID];
+//    NSString *u = [self uuidToString:peripheral.UUID];
 
-    NSLog(@"CFSTRINGREF u %@",u);   // this is just the UUID
-    NSLog(@"CFSTRINGREF U %@",_uuid);
+    //NSLog(@"CFSTRINGREF u %@",u);   // this is just the UUID
+    //NSLog(@"CFSTRINGREF U %@",_uuid);
     
     @try {
     
     
-    [statusbox setStringValue:value];
-    
-    if (_uuid == NULL) _uuid = @"";
-    if (_name == NULL) _name = @"";
-
-    for (int i=0; i < [ItemArray count]; i++) {
-        BTDeviceModel *m = [ItemArray objectAtIndex:i];
-
-        NSLog(@"CFSTRINGREF MNAME %@",m.name);
-        NSLog(@"CFSTRINGREF UUID %@",m.UUID);
+        [statusbox setStringValue:value];
         
-        if ([m.UUID isEqualTo: (_uuid)] || [m.UUID isEqualToString: (_uuid)])
-        {
-            m.RSSI = RSSI;
-            m.name = _name;
+        if (_uuid == NULL) _uuid = @"";
+        if (_name == NULL) _name = @"";
 
-            for (CBService* service in peripheral.services)
+        for (int i=0; i < [ItemArray count]; i++) {
+            BTDeviceModel *m = [ItemArray objectAtIndex:i];
+
+            //NSLog(@"CFSTRINGREF MNAME %@",m.name);
+            //NSLog(@"CFSTRINGREF UUID %@",m.UUID);
+            
+            if ([m.UUID isEqualTo: (_uuid)] || [m.UUID isEqualToString: (_uuid)])
             {
-                NSString *__uuid = [[NSString alloc] initWithFormat:@"LS : %@", service.UUID];
-                NSLog(@"%@",__uuid);
-            }
+                m.RSSI = RSSI;
+                m.name = _name;
 
-            
-            for (id key in [advertisementData allKeys]){
-                id obj = [advertisementData objectForKey: key];
-                
-                //NSLog(@"key : %@  value : %@",key,obj);
-                
-                NSString *_key = [[NSString alloc] initWithFormat:@"%@", key];
-                
-                if ([_key isEqualToString:@"kCBAdvDataManufacturerData"]) {
-                    NSString *ss2 = [NSString stringWithFormat:@"%@",obj];
-                    //NSLog(@"ss2 : %@",ss2);
-                    NSString *ib_uuid = [NSString stringWithFormat:@"%@-%@-%@-%@-%@%@",
-                                         [ss2 substringWithRange:NSMakeRange(10, 8)],
-                                         [ss2 substringWithRange:NSMakeRange(19, 4)],
-                                         [ss2 substringWithRange:NSMakeRange(23, 4)],
-                                         [ss2 substringWithRange:NSMakeRange(28, 4)],
-                                         [ss2 substringWithRange:NSMakeRange(32, 4)],
-                                         [ss2 substringWithRange:NSMakeRange(37, 8)]
-                                         ];
-                    NSString *ib_major = [NSString stringWithFormat:@"%@%@",
-                                          [ss2 substringWithRange:NSMakeRange(46, 2)],
-                                          [ss2 substringWithRange:NSMakeRange(48, 2)]];
-                    
-                    
-                    NSString *ib_minor = [NSString stringWithFormat:@"%@%@",
-                                          [ss2 substringWithRange:NSMakeRange(50, 2)],
-                                          [ss2 substringWithRange:NSMakeRange(52, 2)]];
-                    
-                    m.ib_uuid = ib_uuid;
-                    m.ib_major = [self hex2dec:ib_major];
-                    m.ib_minor = [self hex2dec:ib_minor];
-                    [self findItemInAccountArray:m];
-                    
+                for (CBService* service in peripheral.services)
+                {
+                    NSString *__uuid = [[NSString alloc] initWithFormat:@"LS : %@", service.UUID];
+                    NSLog(@"%@",__uuid);
                 }
+
+                
+                for (id key in [advertisementData allKeys]){
+                    id obj = [advertisementData objectForKey: key];
+                    
+                    //NSLog(@"key : %@  value : %@",key,obj);
+                    
+                    NSString *_key = [[NSString alloc] initWithFormat:@"%@", key];
+                    
+                    if ([_key isEqualToString:@"kCBAdvDataManufacturerData"]) {
+                        NSString *ss2 = [NSString stringWithFormat:@"%@",obj];
+                        //NSLog(@"ss2 : %@",ss2);
+                        NSString *ib_uuid = [NSString stringWithFormat:@"%@-%@-%@-%@-%@%@",
+                                             [ss2 substringWithRange:NSMakeRange(10, 8)],
+                                             [ss2 substringWithRange:NSMakeRange(19, 4)],
+                                             [ss2 substringWithRange:NSMakeRange(23, 4)],
+                                             [ss2 substringWithRange:NSMakeRange(28, 4)],
+                                             [ss2 substringWithRange:NSMakeRange(32, 4)],
+                                             [ss2 substringWithRange:NSMakeRange(37, 8)]
+                                             ];
+                        NSString *ib_major = [NSString stringWithFormat:@"%@%@",
+                                              [ss2 substringWithRange:NSMakeRange(46, 2)],
+                                              [ss2 substringWithRange:NSMakeRange(48, 2)]];
+                        
+                        
+                        NSString *ib_minor = [NSString stringWithFormat:@"%@%@",
+                                              [ss2 substringWithRange:NSMakeRange(50, 2)],
+                                              [ss2 substringWithRange:NSMakeRange(52, 2)]];
+                        
+                        m.ib_uuid = ib_uuid;
+                        m.ib_major = [self hex2dec:ib_major];
+                        m.ib_minor = [self hex2dec:ib_minor];
+                        [self findItemInAccountArray:m];
+                        
+                    }
+                }
+                
+                return;
             }
-            
-            return;
         }
-    }
-    
-    [peripheral discoverServices:Nil];
-
-    BTDeviceModel * pm = [[BTDeviceModel alloc] init];
-    pm.name = _name;
-    pm.UUID = _uuid;
-    pm.RSSI = RSSI;
-    pm.peripheral = peripheral;
-    pm.ib_uuid = @"";
-    pm.ib_major = @"";
-    pm.ib_minor = @"";
-    
-    
-    NSLog(@"%@",value);
-    NSLog(@"%@", [advertisementData description]);
-    NSLog(@"1000 %@",value);
-    NSLog(@"2000 %@", [advertisementData description]);
-    
         
-    for (id key in [advertisementData allKeys]){
-        id obj = [advertisementData objectForKey: key];
+        [peripheral discoverServices:Nil];
 
-        NSLog(@"key : %@  value : %@",key,obj);
+        BTDeviceModel * pm = [[BTDeviceModel alloc] init];
+        pm.name = _name;
+        pm.UUID = _uuid;
+        pm.RSSI = RSSI;
+        pm.peripheral = peripheral;
+        pm.ib_uuid = @"";
+        pm.ib_major = @"";
+        pm.ib_minor = @"";
         
-        NSString *_key = [[NSString alloc] initWithFormat:@"%@", key];
         
-
-        if ([_key isEqualToString:@"kCBAdvDataManufacturerData"]) {
-            NSString *ss2 = [NSString stringWithFormat:@"%@",obj];
-            NSString *ib_uuid = [NSString stringWithFormat:@"%@-%@-%@-%@-%@%@",
-                                                    [ss2 substringWithRange:NSMakeRange(10, 8)],
-                                                    [ss2 substringWithRange:NSMakeRange(19, 4)],
-                                                    [ss2 substringWithRange:NSMakeRange(23, 4)],
-                                                    [ss2 substringWithRange:NSMakeRange(28, 4)],
-                                                    [ss2 substringWithRange:NSMakeRange(32, 4)],
-                                                    [ss2 substringWithRange:NSMakeRange(37, 8)]
-                                 ];
-            NSString *ib_major = [NSString stringWithFormat:@"%@",
-                                 [ss2 substringWithRange:NSMakeRange(46, 4)]];
-
-            NSString *ib_minor = [NSString stringWithFormat:@"%@",
-                                  [ss2 substringWithRange:NSMakeRange(50, 4)]];
-
-            NSLog(@"AdvDataArray: IBUUID : %@ ",ib_uuid);
-            NSLog(@"AdvDataArray: IBMAJOR : %@ ",ib_major);
-            NSLog(@"AdvDataArray: IBINOR : %@ ",ib_minor);
-            pm.ib_uuid = ib_uuid;
-            pm.ib_major = [self hex2dec:ib_major];
-            pm.ib_minor = [self hex2dec:ib_minor];
-
+        NSLog(@"%@",value);
+        NSLog(@"%@", [advertisementData description]);
+        NSLog(@"1000 %@",value);
+        NSLog(@"2000 %@", [advertisementData description]);
+        
             
+        for (id key in [advertisementData allKeys]){
+            id obj = [advertisementData objectForKey: key];
+
+            NSLog(@"key : %@  value : %@",key,obj);
+            
+            NSString *_key = [[NSString alloc] initWithFormat:@"%@", key];
+            
+
+            if ([_key isEqualToString:@"kCBAdvDataManufacturerData"]) {
+                NSString *ss2 = [NSString stringWithFormat:@"%@",obj];
+                NSString *ib_uuid = [NSString stringWithFormat:@"%@-%@-%@-%@-%@%@",
+                                                        [ss2 substringWithRange:NSMakeRange(10, 8)],
+                                                        [ss2 substringWithRange:NSMakeRange(19, 4)],
+                                                        [ss2 substringWithRange:NSMakeRange(23, 4)],
+                                                        [ss2 substringWithRange:NSMakeRange(28, 4)],
+                                                        [ss2 substringWithRange:NSMakeRange(32, 4)],
+                                                        [ss2 substringWithRange:NSMakeRange(37, 8)]
+                                     ];
+                NSString *ib_major = [NSString stringWithFormat:@"%@",
+                                     [ss2 substringWithRange:NSMakeRange(46, 4)]];
+
+                NSString *ib_minor = [NSString stringWithFormat:@"%@",
+                                      [ss2 substringWithRange:NSMakeRange(50, 4)]];
+
+                NSLog(@"AdvDataArray: IBUUID : %@ ",ib_uuid);
+                NSLog(@"AdvDataArray: IBMAJOR : %@ ",ib_major);
+                NSLog(@"AdvDataArray: IBINOR : %@ ",ib_minor);
+                pm.ib_uuid = ib_uuid;
+                pm.ib_major = [self hex2dec:ib_major];
+                pm.ib_minor = [self hex2dec:ib_minor];
+
+                
+            }
         }
-    }
-    
-    [self insertObject:pm inItemArrayAtIndex:0];
-    [self findItemInAccountArray:pm];
+        
+        [self insertObject:pm inItemArrayAtIndex:0];
+        [self findItemInAccountArray:pm];
         
         
     }
@@ -471,14 +513,13 @@ bool isWorking = FALSE;
         NSLog(@"Exception: %@", e);
     }
     @finally {
-        NSLog(@"finally");
+//        NSLog(@"finally");
     }
     
 }
 
-- (void)stopScan {
-    [self.manager stopScan];
-}
+
+#pragma mark - Updating the CVITEMS array
 
 -(void)insertObject:(BTDeviceModel *)p incvitemsAtIndex:(NSUInteger)index {
     [cvitems insertObject:p atIndex:index];
@@ -496,6 +537,8 @@ bool isWorking = FALSE;
     return cvitems;
 }
 
+#pragma mark - Updating the ITEMS array
+
 -(void)insertObject:(BTDeviceModel *)p inItemArrayAtIndex:(NSUInteger)index {
     [ItemArray insertObject:p atIndex:index];
 }
@@ -511,6 +554,8 @@ bool isWorking = FALSE;
 -(NSArray*)itemArray {
     return ItemArray;
 }
+
+#pragma mark - Updating the BEACON array
 
 -(void)clearBeaconArray {
     [ItemArray removeAllObjects];
@@ -534,6 +579,8 @@ bool isWorking = FALSE;
 }
 
 
+#pragma mark - Updating the ACCOUNT array
+
 /* account beacons */
 
 -(void)insertObject:(BTDeviceModel *)p inAccountBeaconsAtIndex:(NSUInteger)index {
@@ -553,6 +600,7 @@ bool isWorking = FALSE;
 }
 
 
+#pragma mark - Updating the startup application
 
 -(void)awakeFromNib {
     
@@ -626,18 +674,48 @@ bool isWorking = FALSE;
     
     
 }
-- (IBAction)buttonbot:(id)sender {
-    [statusbox setStringValue:@"test"];
-    [self clearBeaconArray];
-    [self startScan];
-    
-//    NSString * ret = [self getDataFrom:@"http://jon651.glimworm.com/ibeacon/api.php?action=beacons&verb="];
-//    NSLog(ret);
-    
-    [self readItemsFromAccountArray];
-    
-    
+
+#pragma mark - account array buttons and functions
+
+bool isScanning = FALSE;
+
+-(void) startWithScanning {
+    if (isScanning == FALSE) {
+        [statusbox setStringValue:@"test"];
+        [self clearBeaconArray];
+        [self startScan];
+    //    NSString * ret = [self getDataFrom:@"http://jon651.glimworm.com/ibeacon/api.php?action=beacons&verb="];
+    //    NSLog(ret);
+        [self readItemsFromAccountArray];
+        isScanning = TRUE;
+        [scanningbar setHidden:NO];
+        [scanningbar_spinner startAnimation:self];
+    }
 }
+-(void) stopWithScanning {
+    if (isScanning == TRUE) {
+        [self stopScan];
+        isScanning = FALSE;
+        [scanningbar setHidden:YES];
+        [scanningbar_spinner stopAnimation:self];
+    }
+}
+- (IBAction)buttonbot:(id)sender {
+    [self startWithScanning];
+}
+- (IBAction)buttonstop:(id)sender {
+    [self stopWithScanning];
+}
+
+- (IBAction)tb_scan_for_beacons:(id)sender {
+    if (isScanning == FALSE) {
+        [self startWithScanning];
+    } else {
+        [self stopWithScanning];
+    }
+}
+
+
 - (BTDeviceModel *) findItemInAccountBeaconArray:(NSString *)BEACONID{
     for (BTDeviceModel * btitem in AccountBeacons) {
         if ([BEACONID isEqualToString:btitem.ID ]) {
@@ -692,6 +770,7 @@ bool isWorking = FALSE;
 
 }
 
+#pragma mark - Toolbar
 
 - (IBAction)toolbar_setup:(id)sender {
     [[NSApplication sharedApplication] beginSheet:settingspanel
@@ -703,6 +782,9 @@ bool isWorking = FALSE;
     
 }
 
+
+#pragma mark - Settings panel
+
 - (IBAction)s_close:(id)sender {
     [NSApp endSheet:settingspanel];
     [settingspanel orderOut:self];
@@ -710,6 +792,8 @@ bool isWorking = FALSE;
 }
 
 
+
+#pragma mark - Select (connect) panel
 
 - (IBAction)p_select:(id)sender {
     [[NSApplication sharedApplication] beginSheet:selectpanel
@@ -770,6 +854,7 @@ bool isWorking = FALSE;
 
 - (IBAction)p_adv_100:(id)sender {
     if ([self has16advertisments] == TRUE) {
+        [self writing];
         NSData *data = [@"AT+ADVI0" dataUsingEncoding:NSUTF8StringEncoding];
         NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
         currentcommand = @"AT+ADVI?";
@@ -932,7 +1017,6 @@ bool isWorking = FALSE;
         [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
     }
 }
-
 - (IBAction)p_adv_1280:(id)sender {
     if ([self has16advertisments] == TRUE) {
         [self writing];
@@ -997,13 +1081,10 @@ bool isWorking = FALSE;
     [self donewriting];
 }
 
-- (IBAction)buttonstop:(id)sender {
-    [self stopScan];
-}
 
 - (IBAction)button_connect:(id)sender {
 
-    NSLog([[NSString alloc] initWithFormat:@" connect ( %@ )", [sender alternateTitle] ]);
+    NSLog(@" connect ( %@ )", [sender alternateTitle]);
     NSString *_name = [[NSString alloc] initWithFormat:@"%@", [sender alternateTitle]];
 
     currentPeripheral = Nil;
@@ -1071,7 +1152,7 @@ bool isWorking = FALSE;
 }
 
 - (IBAction)button_favourite:(id)sender {
-    NSLog([[NSString alloc] initWithFormat:@" favourite ( %@ )", [sender alternateTitle] ]);
+    NSLog(@" favourite ( %@ )", [sender alternateTitle]);
     NSString *_name = [[NSString alloc] initWithFormat:@"%@", [sender alternateTitle]];
     
     currentPeripheral = Nil;
@@ -1102,10 +1183,10 @@ bool isWorking = FALSE;
 
 }
 
-- (IBAction)p_close:(id)sender {
-    
-    if (currentPeripheral != Nil) {
+- (void) p_close_window {
 
+    if (currentPeripheral != Nil) {
+        
         if(currentPeripheral.peripheral && ([currentPeripheral.peripheral isConnected]))
         {
             /* Disconnect if it's already connected */
@@ -1120,6 +1201,28 @@ bool isWorking = FALSE;
     
     [NSApp endSheet:panel];
     [panel orderOut:self];
+    
+}
+- (IBAction)p_close:(id)sender {
+
+    if (currentPeripheral != Nil) {
+
+        if(currentPeripheral.peripheral && ([currentPeripheral.peripheral isConnected]))
+        {
+            
+//            NSString *name_str = [[NSString alloc] initWithFormat:@"AT+NAME%@",
+//                                  ([[p_name stringValue] length] > 11 ) ? [[[p_name stringValue] uppercaseString] substringWithRange:NSMakeRange(0, 11)] : [[p_name stringValue] uppercaseString]
+//                                  ];
+
+            NSString *reset = @"AT+RESET";
+            Queue = [NSMutableArray arrayWithObjects:reset,@"close",nil];
+            [self q_next];
+            return;
+
+        
+        }
+    }
+    [self p_close_window];
     
 }
 
@@ -1164,26 +1267,10 @@ const char CMD[] = "\x41\x54\x2B\x4D\x41\x52\x4A\x3F";     // AT+MARJ?
 }
 
 
--(void) applicationDidResignActive:(NSNotification *)notification {
-    NSLog(@"--- RESIGN_ACTIVE");
-}
--(void) applicationDidBecomeActive:(NSNotification *)notification {
-    NSLog(@"--- BECOME_ACTIVE");
-    if (isWorking == TRUE) {
-        [self q_readall];
-    }
-}
--(void) applicationDidHide:(NSNotification *)notification {
-    NSLog(@"--- HIDE");
-    
-}
--(void) applicationDidUnhide:(NSNotification *)notification {
-    NSLog(@"--- UN_HIDE");
-    
-}
 - (void)working {
     
     isWorking = TRUE;
+    [workingpanel setBackgroundColor:[NSColor whiteColor]];
     
     [[NSApplication sharedApplication] beginSheet:workingpanel
                                    modalForWindow:panel
@@ -1202,6 +1289,8 @@ const char CMD[] = "\x41\x54\x2B\x4D\x41\x52\x4A\x3F";     // AT+MARJ?
 
 - (void)writing {
     
+    [writingpanel setBackgroundColor:[NSColor whiteColor]];
+
     [[NSApplication sharedApplication] beginSheet:writingpanel
                                    modalForWindow:panel
                                     modalDelegate:self
@@ -1240,6 +1329,12 @@ NSMutableArray *Queue;
         NSString *q_str = [Queue objectAtIndex:0];
         [Queue removeObjectAtIndex:(0)];
         NSLog(@"Q_NEXT STR %@", q_str);
+        
+        if ([q_str isEqualToString:@"close"]) {
+            currentcommand = @"";
+            [self p_close_window];
+            return;
+        }
         
         
         /* skip this if the versions are too old */
@@ -1286,6 +1381,7 @@ NSMutableArray *Queue;
         NSString *str=[[NSString alloc] initWithBytes:data.bytes length:data.length encoding:NSUTF8StringEncoding];
         [p_log setStringValue: [[NSString alloc] initWithFormat:@"awaiting response for : %@ ...", str] ];
         [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithResponse];
+//        [currentPeripheral.peripheral writeValue:data forCharacteristic:_currentChar type:CBCharacteristicWriteWithoutResponse];
     } else {
         currentcommand = @"";
         [self donewriting];
@@ -1311,8 +1407,8 @@ NSMutableArray *Queue;
                              [ibminor_str_val substringWithRange:NSMakeRange(0,2)],
                              [ibminor_str_val substringWithRange:NSMakeRange(2,2)]];
     
-    NSString *name_str = [[NSString alloc] initWithFormat:@"AT+NAME%@",
-                          ([[p_name stringValue] length] > 6 ) ? [[[p_name stringValue] uppercaseString] substringWithRange:NSMakeRange(0, 6)] : [[p_name stringValue] uppercaseString]
+    NSString *name_str = [[NSString alloc] initWithFormat:@"AT+NAME%@           ",
+                          ([[p_name stringValue] length] > 11 ) ? [[[p_name stringValue] uppercaseString] substringWithRange:NSMakeRange(0, 11)] : [[p_name stringValue] uppercaseString]
                           ];
     
     // format   74278bda-b644-4520-8f0c-720eaf059935
@@ -1335,9 +1431,9 @@ NSMutableArray *Queue;
     NSString *ib3 = [NSString stringWithFormat:@"AT+IBE3%@",
                      [[[p_uuid stringValue] uppercaseString] substringWithRange:NSMakeRange(28, 8)]
                      ];
-
     
     Queue = [NSMutableArray arrayWithObjects:ibmajor_str,ibminor_str,ib0,ib1,ib2,ib3,name_str,nil];
+    //Queue = [NSMutableArray arrayWithObjects:name_str,nil];
     
     [self q_next];
 
@@ -1367,6 +1463,7 @@ NSMutableArray *Queue;
 
 
 
+#pragma mark - Help panel
 
 - (IBAction)p_help:(id)sender {
 
@@ -1377,6 +1474,7 @@ NSMutableArray *Queue;
 
 }
 
+#pragma mark - Http connection helper
 
 - (NSString *) getDataFrom:(NSString *)url{
     // ref from http://stackoverflow.com/questions/9404104/simple-objective-c-get-request

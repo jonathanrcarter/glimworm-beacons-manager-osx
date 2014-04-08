@@ -24,6 +24,8 @@
 		492F09771867A1CF005EBBAC /* beacon_icon_80x80.png in Resources */ = {isa = PBXBuildFile; fileRef = 492F09761867A1CF005EBBAC /* beacon_icon_80x80.png */; };
 		49593A55186B55CA00B55534 /* AccountModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 49593A54186B55CA00B55534 /* AccountModel.m */; };
 		4999F4D218DFFD3800849CC0 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 4999F4D118DFFD3800849CC0 /* icons */; };
+		49DC150918F34DEB008B200A /* glimworm-beacons.png in Resources */ = {isa = PBXBuildFile; fileRef = 49DC150818F34DEB008B200A /* glimworm-beacons.png */; };
+		49DC150B18F353B9008B200A /* icon_128.png in Resources */ = {isa = PBXBuildFile; fileRef = 49DC150A18F353B9008B200A /* icon_128.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +67,8 @@
 		49593A53186B55CA00B55534 /* AccountModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccountModel.h; path = glimworm_ibeacon/accounts/AccountModel.h; sourceTree = "<group>"; };
 		49593A54186B55CA00B55534 /* AccountModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AccountModel.m; path = glimworm_ibeacon/accounts/AccountModel.m; sourceTree = "<group>"; };
 		4999F4D118DFFD3800849CC0 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
+		49DC150818F34DEB008B200A /* glimworm-beacons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "glimworm-beacons.png"; sourceTree = "<group>"; };
+		49DC150A18F353B9008B200A /* icon_128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_128.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,6 +156,8 @@
 		492F093D1866C3C1005EBBAC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				49DC150A18F353B9008B200A /* icon_128.png */,
+				49DC150818F34DEB008B200A /* glimworm-beacons.png */,
 				492F09761867A1CF005EBBAC /* beacon_icon_80x80.png */,
 				492F093E1866C3C1005EBBAC /* glimworm_ibeacon-Info.plist */,
 				492F093F1866C3C1005EBBAC /* InfoPlist.strings */,
@@ -260,7 +266,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49DC150918F34DEB008B200A /* glimworm-beacons.png in Resources */,
 				492F09411866C3C1005EBBAC /* InfoPlist.strings in Resources */,
+				49DC150B18F353B9008B200A /* icon_128.png in Resources */,
 				492F094F1866C3C1005EBBAC /* Images.xcassets in Resources */,
 				492F09471866C3C1005EBBAC /* Credits.rtf in Resources */,
 				4999F4D218DFFD3800849CC0 /* icons in Resources */,

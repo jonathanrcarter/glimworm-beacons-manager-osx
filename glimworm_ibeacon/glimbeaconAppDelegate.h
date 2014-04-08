@@ -109,7 +109,13 @@ struct myuuid{
 - (IBAction)p_adv_6000:(id)sender;
 - (IBAction)p_adv_7000:(id)sender;
 
+- (IBAction)tb_scan_for_beacons:(id)sender;
+@property (weak) IBOutlet NSToolbarItem *tb_scan_for_beacons;
+@property (weak) IBOutlet NSView *scanningbar;
+@property (weak) IBOutlet NSProgressIndicator *scanningbar_spinner;
 
+
+@property (weak) IBOutlet NSScrollView *main_scrollview;
 
 
 

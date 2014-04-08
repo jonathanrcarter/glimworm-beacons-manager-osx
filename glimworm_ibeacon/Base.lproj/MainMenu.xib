@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment defaultVersion="1080" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5053"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -647,17 +647,19 @@
                 </menuItem>
             </items>
         </menu>
-        <window title="Glimworm Beacon Configurator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+        <window title="Glimworm Beacon Configurator" allowsToolTipsWhenApplicationIsInactive="NO" releasedWhenClosed="NO" appearanceType="aqua" animationBehavior="default" id="371">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="480" height="479"/>
+            <rect key="contentRect" x="335" y="390" width="483" height="480"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
+            <value key="minSize" type="size" width="483" height="480"/>
+            <value key="maxSize" type="size" width="483" height="1480"/>
             <view key="contentView" id="372">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="479"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <rect key="frame" x="0.0" y="0.0" width="483" height="480"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dAn-sY-CRz">
-                        <rect key="frame" x="1" y="440" width="240" height="32"/>
+                    <button hidden="YES" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dAn-sY-CRz">
+                        <rect key="frame" x="1" y="441" width="152" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="START MONITORING" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f5G-2O-nRt">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -667,9 +669,12 @@
                             <action selector="buttonbot:" target="494" id="0ew-EF-uvX"/>
                         </connections>
                     </button>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MnV-mC-Vee">
-                        <rect key="frame" x="7" y="8" width="465" height="47"/>
+                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MnV-mC-Vee">
+                        <rect key="frame" x="7" y="9" width="465" height="47"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="47" id="ipq-Qm-pyh"/>
+                        </constraints>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="S2s-df-yEQ">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -679,8 +684,8 @@
                             <outlet property="delegate" destination="494" id="rMu-Sh-ccJ"/>
                         </connections>
                     </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VV1-nk-NG7">
-                        <rect key="frame" x="241" y="440" width="237" height="32"/>
+                    <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VV1-nk-NG7">
+                        <rect key="frame" x="318" y="441" width="160" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="STOP MONITORING" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3qS-Ej-CT1">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -690,15 +695,15 @@
                             <action selector="buttonstop:" target="494" id="0bS-i5-B4v"/>
                         </connections>
                     </button>
-                    <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8K6-7M-JG9">
-                        <rect key="frame" x="-1" y="80" width="482" height="347"/>
+                    <scrollView autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8K6-7M-JG9">
+                        <rect key="frame" x="-1" y="81" width="484" height="347"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <clipView key="contentView" ambiguous="YES" misplaced="YES" id="W4S-g2-dbA">
-                            <rect key="frame" x="1" y="1" width="480" height="345"/>
+                        <clipView key="contentView" id="W4S-g2-dbA">
+                            <rect key="frame" x="1" y="1" width="482" height="345"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <collectionView ambiguous="YES" id="PJW-FI-i21">
-                                    <rect key="frame" x="0.0" y="0.0" width="480" height="345"/>
+                                <collectionView id="PJW-FI-i21">
+                                    <rect key="frame" x="0.0" y="0.0" width="482" height="345"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="primaryBackgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <connections>
@@ -708,17 +713,17 @@
                                 </collectionView>
                             </subviews>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="2GG-2W-qW3">
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="2GG-2W-qW3">
                             <rect key="frame" x="1" y="144" width="233" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="dFH-SU-yRm">
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="dFH-SU-yRm">
                             <rect key="frame" x="234" y="1" width="15" height="143"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bYF-3B-FNT">
-                        <rect key="frame" x="224" y="59" width="31" height="17"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bYF-3B-FNT">
+                        <rect key="frame" x="224" y="60" width="31" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="LOG" id="QyY-TD-fm0">
                             <font key="font" metaFont="system"/>
@@ -726,9 +731,48 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <customView hidden="YES" appearanceType="aqua" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gen-3C-s2d">
+                        <rect key="frame" x="7" y="441" width="476" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <subviews>
+                            <textField appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LmG-7R-f3U">
+                                <rect key="frame" x="63" y="6" width="215" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Scanning for beacons   " id="e3R-iM-jrt">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <progressIndicator appearanceType="aqua" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="djI-tB-5Zz">
+                                <rect key="frame" x="290" y="6" width="16" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </progressIndicator>
+                        </subviews>
+                    </customView>
+                    <imageView appearanceType="aqua" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zav-VZ-3vZ">
+                        <rect key="frame" x="7" y="431" width="120" height="40"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="glimworm-beacons" id="MJz-S3-J9g"/>
+                    </imageView>
                 </subviews>
+                <constraints>
+                    <constraint firstItem="bYF-3B-FNT" firstAttribute="top" secondItem="8K6-7M-JG9" secondAttribute="bottom" constant="4" id="6cw-4G-g7X"/>
+                    <constraint firstItem="MnV-mC-Vee" firstAttribute="trailing" secondItem="VV1-nk-NG7" secondAttribute="trailing" id="IUr-vb-zsV"/>
+                    <constraint firstItem="MnV-mC-Vee" firstAttribute="centerX" secondItem="bYF-3B-FNT" secondAttribute="centerX" id="Irx-ia-QcE"/>
+                    <constraint firstItem="MnV-mC-Vee" firstAttribute="leading" secondItem="dAn-sY-CRz" secondAttribute="leading" id="Pm0-wy-QFv"/>
+                    <constraint firstAttribute="trailing" secondItem="MnV-mC-Vee" secondAttribute="trailing" constant="11" id="Uhj-gv-z06"/>
+                    <constraint firstItem="MnV-mC-Vee" firstAttribute="top" secondItem="bYF-3B-FNT" secondAttribute="bottom" constant="4" id="YMn-mP-tGs"/>
+                    <constraint firstAttribute="bottom" secondItem="8K6-7M-JG9" secondAttribute="bottom" constant="81" id="dAU-Vm-bwt"/>
+                    <constraint firstItem="MnV-mC-Vee" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="7" id="dqC-o2-vdF"/>
+                    <constraint firstAttribute="trailing" secondItem="8K6-7M-JG9" secondAttribute="trailing" id="hfC-JM-eov"/>
+                    <constraint firstItem="8K6-7M-JG9" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="-1" id="ly8-ra-hbj"/>
+                    <constraint firstItem="8K6-7M-JG9" firstAttribute="top" secondItem="VV1-nk-NG7" secondAttribute="bottom" constant="20" symbolic="YES" id="tdj-8d-Rnu"/>
+                    <constraint firstItem="8K6-7M-JG9" firstAttribute="top" secondItem="372" secondAttribute="top" constant="52" id="uIT-SK-rJg"/>
+                    <constraint firstItem="8K6-7M-JG9" firstAttribute="top" secondItem="dAn-sY-CRz" secondAttribute="bottom" constant="20" symbolic="YES" id="wIM-Ew-GjV"/>
+                </constraints>
             </view>
-            <toolbar key="toolbar" implicitIdentifier="D2882126-0605-40B9-9222-05D777C39170" autosavesConfiguration="NO" prefersToBeShown="NO" displayMode="iconAndLabel" sizeMode="regular" id="NpP-Mk-Q08">
+            <toolbar key="toolbar" implicitIdentifier="D2882126-0605-40B9-9222-05D777C39170" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="NpP-Mk-Q08">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="3vC-VI-fSh"/>
                     <toolbarItem implicitItemIdentifier="A08AF890-3487-45C2-B531-355A70C81130" label="Custom View" paletteLabel="Custom View" id="OEt-vD-5P1">
@@ -748,7 +792,7 @@
                         </button>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="BPV-NR-2Pj"/>
-                    <toolbarItem implicitItemIdentifier="379C2BF0-2603-4799-AEFE-392A9E0F2C26" label="Custom View" paletteLabel="Custom View" id="Bv2-i2-HWO">
+                    <toolbarItem implicitItemIdentifier="379C2BF0-2603-4799-AEFE-392A9E0F2C26" label="" paletteLabel="" id="Bv2-i2-HWO">
                         <nil key="toolTip"/>
                         <size key="minSize" width="96" height="22"/>
                         <size key="maxSize" width="96" height="22"/>
@@ -762,19 +806,44 @@
                             </searchFieldCell>
                         </searchField>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="51B62871-BD74-42EE-871A-D07B1B12CB24" label="Scan for beacons" paletteLabel="Scan for beacons" tag="-1" image="NSBluetoothTemplate" id="pHf-Rh-6Zy"/>
+                    <toolbarItem implicitItemIdentifier="51B62871-BD74-42EE-871A-D07B1B12CB24" label="Scan For Beacons" paletteLabel="Scan For Beacons" tag="-1" image="icon_128" id="pHf-Rh-6Zy">
+                        <connections>
+                            <action selector="tb_scan_for_beacons:" target="494" id="1J9-TE-2VA"/>
+                        </connections>
+                    </toolbarItem>
                     <toolbarItem implicitItemIdentifier="49B2486B-C489-4988-9943-89B88B7058C1" label="Accounts" paletteLabel="Accounts" tag="-1" image="NSUserAccounts" id="fdZ-Y3-KYL">
                         <connections>
                             <action selector="toolbar_setup:" target="494" id="mYQ-nt-fyP"/>
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="NSToolbarSeparatorItem" id="NmT-VE-Tfu"/>
+                    <toolbarItem implicitItemIdentifier="FC07F4FB-B0A2-427C-BB76-3F58EF7D73AA" label="" paletteLabel="Toolbar Item" tag="-1" image="glimworm-beacons" id="Ff4-ef-pzQ">
+                        <size key="minSize" width="196" height="22"/>
+                        <size key="maxSize" width="196" height="22"/>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="2A4E9FE5-ABB3-453C-A448-8119BB7C3BD3" label="" paletteLabel="" tag="-1" id="dcs-ct-7RT">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="102" height="48"/>
+                        <size key="maxSize" width="163" height="96"/>
+                        <customView key="view" id="hj2-ge-Brl">
+                            <rect key="frame" x="0.0" y="14" width="102" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <subviews>
+                                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bki-MP-aWz">
+                                    <rect key="frame" x="3" y="3" width="96" height="36"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="glimworm-beacons" id="YAw-Pl-0eE"/>
+                                </imageView>
+                            </subviews>
+                        </customView>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="pHf-Rh-6Zy"/>
                     <toolbarItem reference="NmT-VE-Tfu"/>
                     <toolbarItem reference="fdZ-Y3-KYL"/>
                     <toolbarItem reference="BPV-NR-2Pj"/>
+                    <toolbarItem reference="dcs-ct-7RT"/>
                     <toolbarItem reference="Bv2-i2-HWO"/>
                 </defaultToolbarItems>
             </toolbar>
@@ -785,6 +854,7 @@
                 <outlet property="ibmajor" destination="dhq-ij-Kvv" id="QxP-qp-9IT"/>
                 <outlet property="ibminor" destination="iMh-e4-vm3" id="dJC-WD-9x3"/>
                 <outlet property="ibuuid" destination="0Ts-Bp-tsK" id="ZrG-Wx-7t2"/>
+                <outlet property="main_scrollview" destination="8K6-7M-JG9" id="si1-UI-A8N"/>
                 <outlet property="p100m" destination="SrJ-aA-aKf" id="weF-Ua-DjB"/>
                 <outlet property="p50m" destination="Ov4-Pp-qZ3" id="sya-Mb-w11"/>
                 <outlet property="p5m" destination="T7x-fs-TSE" id="9rY-la-SaI"/>
@@ -816,9 +886,12 @@
                 <outlet property="p_name_ml" destination="zue-gO-bBh" id="nme-RP-nvn"/>
                 <outlet property="p_uuid" destination="99l-66-TJS" id="lrQ-21-8yP"/>
                 <outlet property="panel" destination="Uhe-Jy-8rP" id="RCr-x6-zt1"/>
+                <outlet property="scanningbar" destination="Gen-3C-s2d" id="0Rc-xk-xRr"/>
+                <outlet property="scanningbar_spinner" destination="djI-tB-5Zz" id="9Sr-Cz-fw0"/>
                 <outlet property="selectpanel" destination="jCj-Vc-9nU" id="sg7-y2-xli"/>
                 <outlet property="settingspanel" destination="EUO-nk-SZ2" id="KtB-hZ-233"/>
                 <outlet property="statusbox" destination="MnV-mC-Vee" id="C1V-It-zRQ"/>
+                <outlet property="tb_scan_for_beacons" destination="pHf-Rh-6Zy" id="J5u-zu-DtY"/>
                 <outlet property="v_details" destination="ztS-Nm-dGs" id="qnp-gk-s5s"/>
                 <outlet property="window" destination="371" id="532"/>
                 <outlet property="workingpanel" destination="Ie7-7y-uSk" id="Zcn-6Z-io8"/>
@@ -999,9 +1072,9 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="139" y="81" width="422" height="513"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
-            <view key="contentView" id="ztS-Nm-dGs">
+            <view key="contentView" wantsLayer="YES" id="ztS-Nm-dGs">
                 <rect key="frame" x="0.0" y="0.0" width="422" height="513"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T0N-qJ-y90">
                         <rect key="frame" x="146" y="4" width="110" height="32"/>
@@ -1111,12 +1184,7 @@
                         <rect key="frame" x="68" y="454" width="96" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="E48-C6-grp">
-                            <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="P7R-Uc-Z5n">
-                                <real key="roundingIncrement" value="0.0"/>
-                                <metadata>
-                                    <bool key="localizesFormat" value="YES"/>
-                                </metadata>
-                            </numberFormatter>
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="P7R-Uc-Z5n"/>
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1126,12 +1194,7 @@
                         <rect key="frame" x="68" y="425" width="96" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="PoQ-Y1-Nnh">
-                            <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="he8-3M-s7t">
-                                <real key="roundingIncrement" value="0.0"/>
-                                <metadata>
-                                    <bool key="localizesFormat" value="YES"/>
-                                </metadata>
-                            </numberFormatter>
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" paddingCharacter="*" minimumIntegerDigits="1" maximumIntegerDigits="309" maximumFractionDigits="3" decimalSeparator="." groupingSeparator="," currencyDecimalSeparator="." plusSign="+" minusSign="-" notANumberSymbol="NaN" perMillSymbol="‰" percentSymbol="%" exponentSymbol="E" positivePrefix="" positiveSuffix="" negativePrefix="-" negativeSuffix="" id="he8-3M-s7t"/>
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1519,6 +1582,11 @@
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <font key="titleFont" metaFont="system"/>
                     </box>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DBh-E1-Sk2">
+                        <rect key="frame" x="280" y="433" width="41" height="41"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="beacon_icon_80x80" id="dE3-vw-Tij"/>
+                    </imageView>
                 </subviews>
             </view>
         </window>
@@ -1538,7 +1606,7 @@
                         <tabViewItems>
                             <tabViewItem label="Sever" identifier="1" id="7tr-Md-wbB">
                                 <view key="view" ambiguous="YES" id="nn5-ut-yHA">
-                                    <rect key="frame" x="10" y="33" width="0.0" height="0.0"/>
+                                    <rect key="frame" x="10" y="33" width="134" height="0.0"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <comboBox verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PJb-Ac-fv0">
@@ -1638,11 +1706,11 @@
                                                     </collectionView>
                                                 </subviews>
                                             </clipView>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="d0P-qS-696">
+                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="d0P-qS-696">
                                                 <rect key="frame" x="1" y="144" width="233" height="15"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="2HY-eT-O0r">
+                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="2HY-eT-O0r">
                                                 <rect key="frame" x="234" y="1" width="15" height="143"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -1740,11 +1808,11 @@
                                 </collectionView>
                             </subviews>
                         </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" id="lik-hk-v50">
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="lik-hk-v50">
                             <rect key="frame" x="1" y="144" width="233" height="15"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" id="aUF-Kb-SHi">
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="aUF-Kb-SHi">
                             <rect key="frame" x="234" y="1" width="15" height="143"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
@@ -1853,7 +1921,7 @@ Gw
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="139" y="81" width="421" height="263"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="878"/>
-            <view key="contentView" id="NEo-kx-pi9">
+            <view key="contentView" wantsLayer="YES" id="NEo-kx-pi9">
                 <rect key="frame" x="0.0" y="0.0" width="421" height="263"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
@@ -1894,8 +1962,9 @@ Gw
         </window>
     </objects>
     <resources>
-        <image name="NSBluetoothTemplate" width="7" height="14"/>
         <image name="NSUserAccounts" width="32" height="32"/>
-        <image name="beacon_icon_80x80" width="81.138191223144531" height="81.138191223144531"/>
+        <image name="beacon_icon_80x80" width="81.126762390136719" height="81.126762390136719"/>
+        <image name="glimworm-beacons" width="338" height="101"/>
+        <image name="icon_128" width="129.80281066894531" height="129.80281066894531"/>
     </resources>
 </document>
